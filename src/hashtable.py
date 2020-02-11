@@ -51,9 +51,27 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        
+        # declare variables
+        temp = ''
+        hashed = self._hash_mod(key)
+        storage_2 = self.storage[hashed]
 
-
+        # search for matching key
+        while storage_2 != None and storage_2.key != key:
+            temp = storage_2
+            storage_2 = temp.next
+        
+        # check for collisions
+        # if no collision, store the value with the given key
+        # if a collision is found, handle with Linked List Chaining
+        if storage_2 != None:
+            storage_2.value = value
+        else:
+            linked = LinkedPair(key, value)
+            linked.next = self.storage[hashed]
+            self.storage[hashed] = linked
+        
 
     def remove(self, key):
         '''
@@ -63,7 +81,27 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        # declare variables
+        temp = None
+        hashed = self._hash_mod(key)
+        storage_2 = self.storage[hashed]
+
+        # search for matching key
+        while storage_2 != None and storage_2.key != key:
+            temp = storage_2
+            storage_2 = storage_2.next
+
+        # matching key is not found
+        if self.storage[hashed] == None:
+            return "Can't find that key"
+
+        # if matching key is found, remove it
+        else:
+            if temp == None:
+                self.storage[hashed] = storage_2.next
+            else:
+                temp.next = storage_2.next
 
 
     def retrieve(self, key):
@@ -74,7 +112,21 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        # declare variables
+        temp = ''
+        hashed = self._hash_mod(key)
+        storage_2 = self.storage[hashed]
+
+        # search for value with given key
+        while storage_2 != None:
+            if storage_2.key == key:
+                return storage_2.value
+            storage_2 = storage_2.next
+        
+        # if not found return None
+        else:
+            return None
 
 
     def resize(self):
@@ -84,8 +136,20 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
 
+        # declare variables
+        storage_old = self.storage
+
+        # increase capacity
+        self.capacity *= 2
+        self.storage = self.capacity * [None]
+
+        # copy old hash table to new hash table
+        for index in storage_old:
+            temp = index
+            while temp != None:
+                self.insert(temp.key, temp.value)
+                temp = temp.next
 
 
 if __name__ == "__main__":
